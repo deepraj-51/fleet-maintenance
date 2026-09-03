@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1A2332;
+  --color-bg: #F7F5F0;
+  --color-surface: #FFFFFF;
+  --color-border: #DEDAD1;
+  --color-muted: #6B6357;
+  --color-action: #3D5A6C;
+  --color-action-hover: #2E4652;
+  --color-due: #A34E22;
+  --color-due-bg: #FBEDE4;
+  --color-complete: #3F6B49;
+  --color-complete-bg: #EAF2EC;
+  --color-booked: #3D5A6C;
+  --color-booked-bg: #E7EDF0;
+  --color-in-service: #755A2F;
+  --color-in-service-bg: #F5EEE1;
+  --color-danger: #B3261E;
+  --color-focus: #1D6FA5;
+
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-family-body);
+    font-variant-numeric: tabular-nums;
+    background: var(--color-bg);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+@layer utilities {
+  .skip-link {
+    @apply absolute -left-full top-0 z-100 rounded-br px-4 py-2;
+    background: var(--color-ink);
+    color: var(--color-bg);
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  .visually-hidden {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
