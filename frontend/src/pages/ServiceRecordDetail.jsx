@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import * as recordsApi from '../api/ServiceRecords';
-import * as usersApi from '../api/users';
+import * as usersApi from '../api/Users';
 import StatusBadge from '../components/StatusBadge';
 
 const NEXT_STATUS = { DUE: 'BOOKED', BOOKED: 'IN_SERVICE', IN_SERVICE: 'COMPLETED' };
