@@ -1,7 +1,7 @@
 // src/pages/ServiceRecordList.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import * as recordsApi from '../api/serviceRecords';
+import * as recordsApi from '../api/ServiceRecords';
 import StatusBadge from '../components/StatusBadge';
 
 const STATUS_OPTIONS = ['DUE', 'BOOKED', 'IN_SERVICE', 'COMPLETED'];
