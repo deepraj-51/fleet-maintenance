@@ -1,7 +1,6 @@
-// src/pages/ServiceRecordList.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import * as recordsApi from '../api/ServiceRecords';
+import * as recordsApi from '../api/serviceRecords';
 import StatusBadge from '../components/StatusBadge';
 
 const STATUS_OPTIONS = ['DUE', 'BOOKED', 'IN_SERVICE', 'COMPLETED'];
@@ -37,7 +36,6 @@ export default function ServiceRecordList() {
     load();
   }, [load]);
 
-  // Reset to page 0 whenever filters change
   function handleTextChange(value) {
     setText(value);
     setPage(0);
@@ -48,81 +46,89 @@ export default function ServiceRecordList() {
     setPage(0);
   }
 
+  const inputClass =
+    'block w-full min-h-10 rounded border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-muted focus-visible:outline-2 focus-visible:outline-focus';
+
   return (
     <div>
-      <div className="page-header">
-        <h1>Service records</h1>
-      </div>
+      <h1 className="mb-5 text-xl font-semibold text-ink">Service records</h1>
 
       <form
-        className="filter-bar"
         role="search"
         onSubmit={(e) => e.preventDefault()}
+        className="mb-6 flex flex-wrap items-end gap-4 rounded border border-border bg-surface p-4"
       >
-        <div className="field filter-field">
-          <label htmlFor="record-search">Search description</label>
+        <div className="flex min-w-[220px] flex-1 flex-col gap-1.5">
+          <label htmlFor="record-search" className="text-xs font-semibold text-ink">
+            Search description
+          </label>
           <input
             id="record-search"
             type="search"
             placeholder="e.g. brake pads"
             value={text}
             onChange={(e) => handleTextChange(e.target.value)}
+            className={inputClass}
           />
         </div>
 
-        <div className="field filter-field">
-          <label htmlFor="record-status">Status</label>
+        <div className="flex min-w-[180px] flex-col gap-1.5">
+          <label htmlFor="record-status" className="text-xs font-semibold text-ink">
+            Status
+          </label>
           <select
             id="record-status"
             value={status}
             onChange={(e) => handleStatusChange(e.target.value)}
+            className={inputClass}
           >
             <option value="">All statuses</option>
             {STATUS_OPTIONS.map((s) => (
-              <option key={s} value={s}>
-                {s.replace('_', ' ')}
-              </option>
+              <option key={s} value={s}>{s.replace('_', ' ')}</option>
             ))}
           </select>
         </div>
       </form>
 
       {error && (
-        <p className="form-error" role="alert">
+        <p role="alert" className="mb-4 rounded border border-due bg-due-bg px-3 py-2 text-xs text-due">
           {error}
         </p>
       )}
 
       {loading ? (
-        <p>Loading service records…</p>
+        <p className="text-sm text-muted">Loading service records…</p>
       ) : data.content.length === 0 ? (
-        <div className="empty-state">
+        <div className="rounded border border-dashed border-border bg-surface p-12 text-center text-muted">
           <p>No service records match these filters.</p>
         </div>
       ) : (
         <>
-          <div className="table-scroll">
-            <table>
-              <caption className="visually-hidden">Service records</caption>
+          <div className="overflow-x-auto rounded border border-border bg-surface">
+            <table className="w-full min-w-[640px] border-collapse">
+              <caption className="sr-only">Service records</caption>
               <thead>
-                <tr>
-                  <th scope="col">Vehicle</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Scheduled</th>
-                  <th scope="col"><span className="visually-hidden">Open</span></th>
+                <tr className="bg-bg">
+                  <th scope="col" className="border-b border-border p-3 text-left text-xs font-semibold text-muted">Vehicle</th>
+                  <th scope="col" className="border-b border-border p-3 text-left text-xs font-semibold text-muted">Description</th>
+                  <th scope="col" className="border-b border-border p-3 text-left text-xs font-semibold text-muted">Status</th>
+                  <th scope="col" className="border-b border-border p-3 text-left text-xs font-semibold text-muted">Scheduled</th>
+                  <th scope="col" className="border-b border-border p-3"><span className="sr-only">Open</span></th>
                 </tr>
               </thead>
               <tbody>
                 {data.content.map((r) => (
-                  <tr key={r.id}>
-                    <td>#{r.vehicleId}</td>
-                    <td>{r.description}</td>
-                    <td><StatusBadge status={r.status} /></td>
-                    <td>{r.scheduledDate || '—'}</td>
-                    <td>
-                      <Link to={`/service-records/${r.id}`} className="btn-secondary btn btn-sm">
-                        View<span className="visually-hidden"> record for {r.description}</span>
+                  <tr key={r.id} className="hover:bg-bg">
+                    <td className="border-b border-border p-3 text-sm">#{r.vehicleId}</td>
+                    <td className="border-b border-border p-3 text-sm">{r.description}</td>
+                    <td className="border-b border-border p-3"><StatusBadge status={r.status} /></td>
+                    <td className="border-b border-border p-3 text-sm">{r.scheduledDate || '—'}</td>
+                    <td className="border-b border-border p-3">
+                      <Link
+                        to={`/service-records/${r.id}`}
+                        className="inline-block min-h-8 rounded border border-action px-3 py-1 text-xs font-medium text-action hover:bg-bg"
+                      >
+                        View<span className="sr-only"> record for {r.description}</span>
                       </Link>
                     </td>
                   </tr>
@@ -131,12 +137,12 @@ export default function ServiceRecordList() {
             </table>
           </div>
 
-          <nav className="pagination" aria-label="Service records pages">
+          <nav aria-label="Service records pages" className="mt-4 flex items-center gap-4 text-xs text-muted">
             <button
               type="button"
-              className="btn-secondary btn btn-sm"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
+              className="min-h-8 rounded border border-action px-3 py-1 font-medium text-action hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Previous
             </button>
@@ -145,9 +151,9 @@ export default function ServiceRecordList() {
             </span>
             <button
               type="button"
-              className="btn-secondary btn btn-sm"
               onClick={() => setPage((p) => Math.min(data.totalPages - 1, p + 1))}
               disabled={page >= data.totalPages - 1}
+              className="min-h-8 rounded border border-action px-3 py-1 font-medium text-action hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Next
             </button>
